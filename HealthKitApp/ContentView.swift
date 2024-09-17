@@ -3,7 +3,8 @@ import HealthKit
 
 class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
-    @Published var steps: Int = 0
+    @Published var dailySteps: Int = 0
+    @Published var weeklySteps: [Date: Int] = [:]
     @Published var isAuthorized = false
     private var updateTimer: Timer?
 
@@ -22,7 +23,8 @@ class HealthManager: ObservableObject {
             DispatchQueue.main.async {
                 self.isAuthorized = success
                 if success {
-                    self.fetchSteps()
+                    self.fetchDailySteps()
+                    self.fetchWeeklySteps()
                     self.startUpdates()
                 } else if let error = error {
                     print("Authorization failed: \(error.localizedDescription)")
@@ -31,7 +33,7 @@ class HealthManager: ObservableObject {
         }
     }
 
-    func fetchSteps() {
+    func fetchDailySteps() {
         guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
         
         let now = Date()
@@ -40,12 +42,51 @@ class HealthManager: ObservableObject {
         
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             guard let result = result, let sum = result.sumQuantity() else {
-                print("Failed to fetch steps: \(error?.localizedDescription ?? "Unknown error")")
+                print("Failed to fetch daily steps: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
             DispatchQueue.main.async {
-                self.steps = Int(sum.doubleValue(for: HKUnit.count()))
+                self.dailySteps = Int(sum.doubleValue(for: HKUnit.count()))
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+
+    func fetchWeeklySteps() {
+        guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
+        
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+        let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startOfWeek, end: endOfWeek, options: .strictStartDate)
+        
+        let query = HKStatisticsCollectionQuery(quantityType: stepType,
+                                                quantitySamplePredicate: predicate,
+                                                options: .cumulativeSum,
+                                                anchorDate: startOfWeek,
+                                                intervalComponents: DateComponents(day: 1))
+        
+        query.initialResultsHandler = { query, results, error in
+            guard let results = results else {
+                print("Failed to fetch weekly steps: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            var steps: [Date: Int] = [:]
+            results.enumerateStatistics(from: startOfWeek, to: endOfWeek) { statistics, stop in
+                if let quantity = statistics.sumQuantity() {
+                    let date = statistics.startDate
+                    let value = Int(quantity.doubleValue(for: HKUnit.count()))
+                    steps[date] = value
+                }
+            }
+            
+            DispatchQueue.main.async {
+                self.weeklySteps = steps
             }
         }
         
@@ -54,7 +95,8 @@ class HealthManager: ObservableObject {
 
     func startUpdates() {
         updateTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
-            self.fetchSteps()
+            self.fetchDailySteps()
+            self.fetchWeeklySteps()
         }
     }
 
@@ -75,7 +117,7 @@ struct ContentView: View {
 
             GraphView(healthManager: healthManager)
                 .tabItem {
-                    Label("グラフ", systemImage: "chart.pie")
+                    Label("グラフ", systemImage: "chart.bar")
                 }
 
             SettingsView()
@@ -94,10 +136,11 @@ struct MainView: View {
             if healthManager.isAuthorized {
                 Text("今日の歩数")
                     .font(.title)
-                Text("\(healthManager.steps)")
+                Text("\(healthManager.dailySteps)")
                     .font(.system(size: 80, weight: .bold))
                 Button("更新") {
-                    healthManager.fetchSteps()
+                    healthManager.fetchDailySteps()
+                    healthManager.fetchWeeklySteps()
                 }
                 .padding()
             } else {
@@ -114,6 +157,34 @@ struct MainView: View {
 struct GraphView: View {
     @ObservedObject var healthManager: HealthManager
     @AppStorage("dailyGoal") private var dailyGoal = 10000
+    @State private var selectedTab = 0
+
+    var body: some View {
+        VStack {
+            Picker("表示期間", selection: $selectedTab) {
+                Text("今日").tag(0)
+                Text("今週").tag(1)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+
+            if selectedTab == 0 {
+                DailyStepChart(steps: healthManager.dailySteps, goal: dailyGoal)
+            } else {
+                WeeklyStepChart(weeklySteps: healthManager.weeklySteps, goal: dailyGoal)
+            }
+        }
+        .padding()
+        .onAppear {
+            healthManager.fetchDailySteps()
+            healthManager.fetchWeeklySteps()
+        }
+    }
+}
+
+struct DailyStepChart: View {
+    let steps: Int
+    let goal: Int
 
     var body: some View {
         VStack {
@@ -126,36 +197,67 @@ struct GraphView: View {
                     .foregroundColor(Color.blue)
                 
                 Circle()
-                    .trim(from: 0.0, to: min(CGFloat(healthManager.steps) / CGFloat(dailyGoal), 1.0))
+                    .trim(from: 0.0, to: min(CGFloat(steps) / CGFloat(goal), 1.0))
                     .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                     .foregroundColor(Color.blue)
                     .rotationEffect(Angle(degrees: 270.0))
-                    .animation(.linear, value: healthManager.steps)
                 
                 VStack {
-                    Text("\(healthManager.steps)")
+                    Text("\(steps)")
                         .font(.system(size: 50, weight: .bold, design: .rounded))
                     Text("歩")
                         .font(.title2)
                 }
             }
-            .frame(width: 250, height: 250)
+            .frame(height: 250)
             
-            Text("目標: \(dailyGoal)歩")
+            Text("目標: \(goal)歩")
                 .font(.headline)
                 .padding(.top)
             
-            if healthManager.steps >= dailyGoal {
+            if steps >= goal {
                 Text("目標達成おめでとうございます！ 🎉")
                     .font(.headline)
                     .foregroundColor(.green)
                     .padding(.top)
             }
         }
-        .padding()
-        .onAppear {
-            healthManager.fetchSteps()
+    }
+}
+
+struct WeeklyStepChart: View {
+    let weeklySteps: [Date: Int]
+    let goal: Int
+
+    var body: some View {
+        VStack {
+            Text("今週の歩数")
+                .font(.title)
+            
+            TabView {
+                ForEach(getWeekDays(), id: \.self) { date in
+                    DailyStepChart(steps: weeklySteps[date] ?? 0, goal: goal)
+                        .tabItem {
+                            Text(formatDate(date))
+                        }
+                }
+            }
+            .frame(height: 350)
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         }
+    }
+
+    private func getWeekDays() -> [Date] {
+        let calendar = Calendar.current
+        let today = Date()
+        let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
+        return (0..<7).map { calendar.date(byAdding: .day, value: $0, to: weekStart)! }
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/d (E)"
+        return formatter.string(from: date)
     }
 }
 

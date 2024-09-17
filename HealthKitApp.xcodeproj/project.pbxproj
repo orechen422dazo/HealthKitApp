@@ -20,6 +20,7 @@
 		B3506BD22C9A3D6900424D3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3506BD42C9A3D6900424D3E /* HealthKitApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthKitApp.entitlements; sourceTree = "<group>"; };
 		B3506BD62C9A3D6900424D3E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B3506BDD2C9A3F4B00424D3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +53,7 @@
 		B3506BCD2C9A3D6800424D3E /* HealthKitApp */ = {
 			isa = PBXGroup;
 			children = (
+				B3506BDD2C9A3F4B00424D3E /* Info.plist */,
 				B3506BCE2C9A3D6800424D3E /* HealthKitAppApp.swift */,
 				B3506BD02C9A3D6800424D3E /* ContentView.swift */,
 				B3506BD22C9A3D6900424D3E /* Assets.xcassets */,
@@ -274,6 +276,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthKitApp/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "このアプリは、あなたの日々の活動量を追跡するために歩数データを読み取ります。";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "このアプリは、あなたの日々の活動量を追跡するために歩数データを読み取ります。";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -312,6 +317,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthKitApp/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "このアプリは、あなたの日々の活動量を追跡するために歩数データを読み取ります。";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "このアプリは、あなたの日々の活動量を追跡するために歩数データを読み取ります。";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

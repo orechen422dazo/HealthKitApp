@@ -11,6 +11,12 @@
 		B3506BD12C9A3D6800424D3E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3506BD02C9A3D6800424D3E /* ContentView.swift */; };
 		B3506BD32C9A3D6900424D3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3506BD22C9A3D6900424D3E /* Assets.xcassets */; };
 		B3506BD72C9A3D6900424D3E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3506BD62C9A3D6900424D3E /* Preview Assets.xcassets */; };
+		B38086D72C9B82DC00E6AD76 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086D62C9B82DC00E6AD76 /* HealthManager.swift */; };
+		B38086D92C9B833A00E6AD76 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086D82C9B833A00E6AD76 /* MainView.swift */; };
+		B38086DB2C9B836300E6AD76 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086DA2C9B836300E6AD76 /* GraphView.swift */; };
+		B38086DD2C9B839400E6AD76 /* DailyStepChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086DC2C9B839400E6AD76 /* DailyStepChart.swift */; };
+		B38086DF2C9B83BD00E6AD76 /* WeeklyStepChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086DE2C9B83BD00E6AD76 /* WeeklyStepChart.swift */; };
+		B38086E12C9B83ED00E6AD76 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38086E02C9B83ED00E6AD76 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +27,12 @@
 		B3506BD42C9A3D6900424D3E /* HealthKitApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthKitApp.entitlements; sourceTree = "<group>"; };
 		B3506BD62C9A3D6900424D3E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B3506BDD2C9A3F4B00424D3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B38086D62C9B82DC00E6AD76 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
+		B38086D82C9B833A00E6AD76 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		B38086DA2C9B836300E6AD76 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		B38086DC2C9B839400E6AD76 /* DailyStepChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyStepChart.swift; sourceTree = "<group>"; };
+		B38086DE2C9B83BD00E6AD76 /* WeeklyStepChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyStepChart.swift; sourceTree = "<group>"; };
+		B38086E02C9B83ED00E6AD76 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +68,12 @@
 				B3506BDD2C9A3F4B00424D3E /* Info.plist */,
 				B3506BCE2C9A3D6800424D3E /* HealthKitAppApp.swift */,
 				B3506BD02C9A3D6800424D3E /* ContentView.swift */,
+				B38086D82C9B833A00E6AD76 /* MainView.swift */,
+				B38086DA2C9B836300E6AD76 /* GraphView.swift */,
+				B38086DE2C9B83BD00E6AD76 /* WeeklyStepChart.swift */,
+				B38086E02C9B83ED00E6AD76 /* SettingsView.swift */,
+				B38086DC2C9B839400E6AD76 /* DailyStepChart.swift */,
+				B38086D62C9B82DC00E6AD76 /* HealthManager.swift */,
 				B3506BD22C9A3D6900424D3E /* Assets.xcassets */,
 				B3506BD42C9A3D6900424D3E /* HealthKitApp.entitlements */,
 				B3506BD52C9A3D6900424D3E /* Preview Content */,
@@ -141,7 +159,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B38086DB2C9B836300E6AD76 /* GraphView.swift in Sources */,
+				B38086E12C9B83ED00E6AD76 /* SettingsView.swift in Sources */,
 				B3506BD12C9A3D6800424D3E /* ContentView.swift in Sources */,
+				B38086DD2C9B839400E6AD76 /* DailyStepChart.swift in Sources */,
+				B38086DF2C9B83BD00E6AD76 /* WeeklyStepChart.swift in Sources */,
+				B38086D92C9B833A00E6AD76 /* MainView.swift in Sources */,
+				B38086D72C9B82DC00E6AD76 /* HealthManager.swift in Sources */,
 				B3506BCF2C9A3D6800424D3E /* HealthKitAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
